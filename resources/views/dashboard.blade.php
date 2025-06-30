@@ -1,17 +1,14 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+@section('content')
+  <h1>Dashboard</h1>
+  <nav>
+    <ul>
+      <li><a href="{{ route('posts.create') }}">Criar Postagem</a></li>
+      <li><a href="{{ route('posts.index') }}">Ver Todas as Postagens</a></li>
+      <li><a href="{{ route('posts.my') }}">Ver Minhas Postagens</a></li>
+      <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+    </ul>
+  </nav>
+  <p>Você está autenticado!</p>
+@endsection

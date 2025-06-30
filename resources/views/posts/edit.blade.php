@@ -19,18 +19,25 @@
         </ul>
     @endif
 
-    <form action="{{ route('posts.update', $post) }}" method="POST">
-        @csrf
-        @method('PUT')
+    <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-        <label for="title">Título:</label><br>
-        <input type="text" id="title" name="title" value="{{ old('title', $post->title) }}"><br><br>
+    <label for="title">Título:</label>
+    <input type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required>
 
-        <label for="content">Conteúdo:</label><br>
-        <textarea id="content" name="content">{{ old('content', $post->content) }}</textarea><br><br>
+    <label for="content">Conteúdo:</label>
+    <textarea name="content" id="content" required>{{ old('content', $post->content) }}</textarea>
 
-        <button type="submit">Atualizar</button>
-    </form>
+    <label for="image">Imagem:</label>
+    @if ($post->image)
+        <img src="{{ asset('storage/' . $post->image) }}" alt="Imagem atual" style="max-width:200px; display:block; margin-bottom:10px;">
+    @endif
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <button type="submit">Atualizar</button>
+</form>
+
 
     <p><a href="{{ url('/') }}">Voltar para lista</a></p>
 </body>

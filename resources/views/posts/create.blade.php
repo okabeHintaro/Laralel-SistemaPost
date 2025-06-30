@@ -19,17 +19,21 @@
         </ul>
     @endif
 
-    <form action="{{ route('posts.store') }}" method="POST">
-        @csrf
+    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
-        <label for="title">Título:</label><br>
-        <input type="text" id="title" name="title" value="{{ old('title') }}"><br><br>
+    <label for="title">Título:</label>
+    <input type="text" name="title" id="title" required>
 
-        <label for="content">Conteúdo:</label><br>
-        <textarea id="content" name="content">{{ old('content') }}</textarea><br><br>
+    <label for="content">Conteúdo:</label>
+    <textarea name="content" id="content" required></textarea>
 
-        <button type="submit">Salvar</button>
-    </form>
+    <label for="image">Imagem:</label>
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <button type="submit">Salvar</button>
+</form>
+
 
     <p><a href="{{ url('/') }}">Voltar para lista</a></p>
 </body>
