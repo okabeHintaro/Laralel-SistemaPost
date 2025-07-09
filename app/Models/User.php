@@ -38,13 +38,11 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+    'email_verified_at' => 'datetime',
+    'password' => 'hashed',
+    ];
+
 
     // app/Models/Post.php
 public function posts()
@@ -57,7 +55,39 @@ public function comments()
     return $this->hasMany(Comment::class);
 }
 
+// User.php
+
+public function following()
+{
+    return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id')->withTimestamps();
+}
+
+public function followers()
+{
+    return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id')->withTimestamps();
+}
 
 
+// Verifica se o usuário segue outro
+public function isFollowing(User $user)
+{
+    return $this->following->contains($user);
+}
+
+public function addEcos(int $points): void
+{
+    $this->ecos += $points;
+    $this->save();
+}
+
+public function likes()
+{
+    return $this->hasMany(Like::class);
+}
+
+public function savedPosts()
+{
+    return $this->belongsToMany(Post::class, 'post_saves')->withTimestamps();
+}
 
 }

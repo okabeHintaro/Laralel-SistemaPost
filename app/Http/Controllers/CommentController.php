@@ -26,16 +26,23 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, \App\Models\Post $post)
+   public function store(Request $request, \App\Models\Post $post)
 {
     $request->validate([
         'body' => 'required|min:3',
+        'parent_id' => 'nullable|exists:comments,id'
     ]);
 
-    $post->comments()->create([
+    $comment = $post->comments()->create([
         'user_id' => auth()->id(),
         'body' => $request->body,
+        'parent_id' => $request->parent_id
     ]);
+
+    // Adiciona ecos ao autor do post (se o comentário for raiz)
+    if (!$comment->parent_id) {
+        $post->user->addEcos(3);
+    }
 
     return back()->with('success', 'Comentário enviado!');
 }

@@ -1,0 +1,24 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#6245
+    [34mid[39m: [35m2[39m,
+    [34mname[39m: "[32mruan[39m",
+    [34memail[39m: "[32mruan@gmail.com[39m",
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: "[32m$2y$12$GN.DcE3MK2DR6uAF.ii3v.g7vyTHeLay7gHV1zBzCdh.C02/wobgi[39m",
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2025-07-07 02:26:17[39m",
+    [34mupdated_at[39m: "[32m2025-07-07 02:26:17[39m",
+    [34mposts[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#6247
+      [34mall[39m: [
+        [34;4mApp\Models\Post[39;24m {#6253
+          [34mid[39m: [35m1[39m,
+          [34mtitle[39m: "[32mestou feliz[39m",
+          [34mcontent[39m: "[32mporque sim[39m",
+          [34mcreated_at[39m: "[32m2025-07-07 02:33:41[39m",
+          [34mupdated_at[39m: "[32m2025-07-07 02:33:41[39m",
+          [34muser_id[39m: [35m2[39m,
+          [34mimage[39m: [36mnull[39m,
+        },
+      ],
+    },
+  }
+

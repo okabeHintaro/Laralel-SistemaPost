@@ -22,14 +22,17 @@
     <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
-    <label for="title">Título:</label>
-    <input type="text" name="title" id="title" required>
+    <label for="title">Título:</label><br>
+    <input type="text" name="title" id="title" required><br><br>
 
-    <label for="content">Conteúdo:</label>
-    <textarea name="content" id="content" required></textarea>
+    <label for="content">Conteúdo:</label><br>
+    <textarea name="content" id="content" required></textarea><br><br>
 
-    <label for="image">Imagem:</label>
-    <input type="file" name="image" id="image" accept="image/*">
+    <label for="image">Imagem:</label><br>
+    <input type="file" name="image" id="image" accept="image/*"><br><br>
+
+    <label for="tags">Tags (separe por vírgula):</label><br>
+    <input type="text" name="tags" id="tags" placeholder="ex: laravel, php, backend"><br><br>
 
     <button type="submit">Salvar</button>
 </form>

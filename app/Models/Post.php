@@ -28,5 +28,31 @@ public function comments()
     return $this->hasMany(Comment::class);
 }
 
+public function likes()
+{
+    return $this->hasMany(Like::class);
+}
+
+public function isLikedBy(User $user)
+{
+    return $this->likes()->where('user_id', $user->id)->exists();
+}
+
+public function likesCount()
+{
+    return $this->likes()->count();
+}
+
+public function savedByUsers()
+{
+    return $this->belongsToMany(User::class, 'post_saves')->withTimestamps();
+}
+
+public function tags()
+{
+    return $this->belongsToMany(Tag::class);
+}
+
+
 
 }
