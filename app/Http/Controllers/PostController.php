@@ -150,23 +150,16 @@ public function search(Request $request)
 {
     $query = $request->input('q');
 
+    // Busca por tag
     if (str_starts_with($query, '#')) {
-        // Busca por tag
         $tagName = ltrim($query, '#');
-
-        $tag = Tag::where('name', 'like', '%' . $tagName . '%')->first();
-
-        if ($tag) {
-            $posts = $tag->posts()->with('user')->latest()->get();
-        } else {
-            $posts = collect(); // Vazio
-        }
+        $tag = Tag::where('name', $tagName)->first();
+        $posts = $tag ? $tag->posts()->with('user')->latest()->get() : collect();
     } else {
-        // Busca por título, conteúdo ou descrição
-        $posts = \App\Models\Post::where('title', 'like', "%$query%")
-            ->orWhere('content', 'like', "%$query%")
-            ->orWhere('description', 'like', "%$query%")
-            ->with('user')
+        // Busca por título, conteúdo ou até descrição se você adicionar
+        $posts = Post::with('user')
+            ->where('title', 'like', "%{$query}%")
+            ->orWhere('content', 'like', "%{$query}%")
             ->latest()
             ->get();
     }
@@ -178,18 +171,36 @@ public function autocomplete(Request $request)
 {
     $query = $request->get('q');
 
-    $results = \App\Models\Post::where('title', 'like', "%{$query}%")
-        ->orWhere('content', 'like', "%{$query}%")
-        ->pluck('title')
-        ->take(10)
-        ->toArray();
+    // Começa com "#" => busca só nas tags
+    if (str_starts_with($query, '#')) {
+        $query = ltrim($query, '#');
 
+        $tagMatches = \App\Models\Tag::where('name', 'like', "%{$query}%")
+            ->limit(5)
+            ->pluck('name')
+            ->map(fn($tag) => '#' . $tag);
+
+        return response()->json($tagMatches);
+    }
+
+    // Caso contrário, busca em tags e posts
     $tagMatches = \App\Models\Tag::where('name', 'like', "%{$query}%")
+        ->limit(3)
         ->pluck('name')
-        ->toArray();
+        ->map(fn($tag) => '#' . $tag);
 
-    return response()->json(array_unique(array_merge($results, $tagMatches)));
+    $postMatches = \App\Models\Post::where('title', 'like', "%{$query}%")
+        ->orWhere('content', 'like', "%{$query}%")
+        ->limit(5)
+        ->pluck('title');
+
+    $results = $tagMatches->merge($postMatches)->unique()->values();
+
+    return response()->json($results);
 }
+
+
+
 
 
 }

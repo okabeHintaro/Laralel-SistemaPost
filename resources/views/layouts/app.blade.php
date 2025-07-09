@@ -16,18 +16,15 @@
       {{-- 🔍 Campo de busca no header --}}
       <form action="{{ route('posts.search') }}" method="GET" class="relative">
         <input
-          type="text"
-          name="q"
-          id="search-input"
-          placeholder="Buscar #tags, título ou conteúdo"
-          autocomplete="off"
-          class="border border-gray-300 px-3 py-1 rounded w-60"
+            type="text"
+            name="q"
+            id="search-input"
+            placeholder="Buscar #tags, título ou conteúdo"
+            class="border border-gray-300 px-3 py-1 rounded w-60"
+            autocomplete="off"
         >
-        <div id="autocomplete-results" class="absolute bg-white border border-gray-300 w-60 mt-1 rounded shadow z-10 hidden"></div>
-        <button type="submit" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">
-          Buscar
-        </button>
-      </form>
+        <div id="autocomplete-results" class="absolute bg-white border w-60 shadow hidden z-10"></div>
+    </form>
 
       <nav class="space-x-4">
         @auth
@@ -54,38 +51,35 @@
     &copy; {{ date('Y') }} Sistema de Postagens
   </footer>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
+<script>
   $(document).ready(function () {
     $('#search-input').on('input', function () {
-      const query = $(this).val();
-      if (query.length < 2) {
+      let query = $(this).val();
+      if (query.length < 1) {
         $('#autocomplete-results').empty().addClass('hidden');
         return;
       }
 
-      $.ajax({
-        url: '{{ route("posts.autocomplete") }}',
-        data: { q: query },
-        success: function (data) {
-          let html = '';
-          if (data.length) {
-            data.forEach(item => {
-              html += `<div class="px-3 py-1 cursor-pointer hover:bg-gray-100" onclick="selectSuggestion('${item}')">${item}</div>`;
-            });
-            $('#autocomplete-results').html(html).removeClass('hidden');
-          } else {
-            $('#autocomplete-results').html('<div class="px-3 py-1 text-gray-500">Nenhum resultado</div>').removeClass('hidden');
-          }
+      $.get('{{ route("posts.autocomplete") }}', { q: query }, function (data) {
+        let html = '';
+        if (data.length) {
+          data.forEach(item => {
+            html += `<div class="px-3 py-1 cursor-pointer hover:bg-gray-100" onclick="selectTag('${item}')">${item}</div>`;
+          });
+        } else {
+          html = `<div class="px-3 py-1 text-gray-500">Nenhum resultado</div>`;
         }
+        $('#autocomplete-results').html(html).removeClass('hidden');
       });
     });
   });
 
-  function selectSuggestion(text) {
-    $('#search-input').val(text);
+  function selectTag(value) {
+    $('#search-input').val(value);
     $('#autocomplete-results').addClass('hidden');
-    $('form').submit();
+    $('#search-input').closest('form').submit();
   }
 </script>
+
 </body>
 </html>
