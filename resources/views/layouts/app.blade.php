@@ -12,6 +12,18 @@
         <a href="{{ route('posts.index') }}" class="text-indigo-600">Sistema de Postagens</a>
       </h1>
 
+      @auth
+  @php
+      $unreadCount = auth()->user()->notifications()->where('read', false)->count();
+  @endphp
+  <a href="{{ route('notifications.index') }}" class="text-gray-700 hover:text-indigo-600">
+    🔔 Notificações 
+    @if ($unreadCount)
+      <span class="text-red-600 font-bold">({{ $unreadCount }})</span>
+    @endif
+  </a>
+@endauth
+
 
       {{-- 🔍 Campo de busca no header --}}
       <form action="{{ route('posts.search') }}" method="GET" class="relative">

@@ -7,6 +7,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SavePostController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\NotificationController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])->name('posts.like');
      Route::post('/posts/{post}/salvar', [SavePostController::class, 'toggle'])->name('posts.save');
     Route::get('/salvos', [SavePostController::class, 'index'])->name('posts.saved');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.markAsRead');
 });
 
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
@@ -40,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/tags/{tag}', [\App\Http\Controllers\TagController::class, 'show'])->name('tags.show');
     Route::get('/busca', [\App\Http\Controllers\PostController::class, 'search'])->name('posts.search');
     Route::get('/autocomplete', [\App\Http\Controllers\PostController::class, 'autocomplete'])->name('posts.autocomplete');
+
 
 
 

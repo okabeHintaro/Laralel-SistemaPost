@@ -44,6 +44,29 @@ class CommentController extends Controller
         $post->user->addEcos(3);
     }
 
+    // Notifica o autor do comentário original (se for uma resposta)
+    if ($comment->parent && $comment->parent->user_id !== auth()->id()) {
+        $comment->parent->user->notify('reply', [
+            'from_user_id' => auth()->id(),
+            'from_user_name' => auth()->user()->name,
+            'post_id' => $post->id,
+            'post_title' => $post->title,
+            'comment_content' => $comment->parent->body,
+        ]);
+    }
+
+
+    if ($post->user_id !== auth()->id()) {
+    $post->user->notify('comment', [
+        'from_user_id' => auth()->id(),
+        'from_user_name' => auth()->user()->name,
+        'post_id' => $post->id,
+        'post_title' => $post->title,
+        'comment_content' => $comment->body,
+    ]);
+}
+
+
     return back()->with('success', 'Comentário enviado!');
 }
 

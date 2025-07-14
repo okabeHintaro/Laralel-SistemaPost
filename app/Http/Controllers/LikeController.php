@@ -23,8 +23,22 @@ class LikeController extends Controller
         $post->likes()->create(['user_id' => $user->id]);
 
         // Adiciona ecos ao autor do post
-        $post->user->increment('ecos', 2);
+        $post->user->addEcos(2, "recebeu uma curtida");
+
+        // Dentro de toggle()
+
+if ($post->user->id !== $user->id) {
+    $post->user->notify('like', [
+        'from_user_id' => $user->id,
+        'from_user_name' => $user->name,
+        'post_id' => $post->id,
+        'post_title' => $post->title,
+    ]);
+}
+
     }
+
+    
 
     return back();
 }

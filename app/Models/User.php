@@ -74,11 +74,21 @@ public function isFollowing(User $user)
     return $this->following->contains($user);
 }
 
-public function addEcos(int $points): void
+public function ecos()
 {
-    $this->ecos += $points;
-    $this->save();
+    return $this->hasMany(Eco::class);
 }
+
+public function addEcos(int $amount, string $reason = null): void
+{
+    $this->increment('ecos', $amount); // atualiza campo 'ecos' no perfil
+
+    $this->ecos()->create([
+        'amount' => $amount,
+        'reason' => $reason
+    ]);
+}
+
 
 public function likes()
 {
@@ -89,5 +99,20 @@ public function savedPosts()
 {
     return $this->belongsToMany(Post::class, 'post_saves')->withTimestamps();
 }
+
+public function notifications()
+{
+    return $this->hasMany(Notification::class);
+}
+
+public function notify(string $type, array $data = [])
+{
+    $this->notifications()->create([
+        'type' => $type,
+        'data' => $data,
+        'read' => false,
+    ]);
+}
+
 
 }

@@ -7,6 +7,8 @@ use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Tag;
+use App\Models\User;
+
 
 
 class PostController extends Controller {
@@ -27,7 +29,28 @@ public function index()
         ->limit(10)
         ->get();
 
-    return view('posts.index', compact('posts', 'popularTags'));
+        $topToday = User::withSum(['ecos as total_eco' => function ($q) {
+    $q->whereDate('created_at', today());
+}], 'amount')->orderByDesc('total_eco')->take(5)->get();
+
+$topWeek = User::withSum(['ecos as total_eco' => function ($q) {
+    $q->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+}], 'amount')->orderByDesc('total_eco')->take(5)->get();
+
+$topMonth = User::withSum(['ecos as total_eco' => function ($q) {
+    $q->whereMonth('created_at', now()->month);
+}], 'amount')->orderByDesc('total_eco')->take(5)->get();
+
+
+$suggestedUsers = \App\Models\User::withCount('posts')
+    ->where('id', '!=', auth()->id())
+    ->inRandomOrder()
+    ->take(5)
+    ->get();
+
+
+    return view('posts.index', compact('posts', 'popularTags', 'topToday', 'topWeek', 'topMonth','suggestedUsers'));
+
 }
 
 

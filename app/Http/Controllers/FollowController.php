@@ -21,6 +21,13 @@ class FollowController extends Controller
 
         // +4 ecos para o usuário seguido
         $user->addEcos(4);
+
+        if ($user->id !== $authUser->id) {
+            $user->notify('follow', [
+                'from_user_id' => $authUser->id,
+                'from_user_name' => $authUser->name,
+            ]);
+        }
     }
 
     return back();
